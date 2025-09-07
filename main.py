@@ -11,7 +11,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import faiss
 import numpy as np
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
@@ -184,7 +183,9 @@ Content:
             partial_variables={"format_instructions": parser.get_format_instructions()}
         )
 
-        return LLMChain(prompt=prompt, llm=llm), parser
+        # Create a chain using the new approach: prompt | llm
+        chain = prompt | llm
+        return chain, parser
     except Exception as e:
         print(f"Error building MCQ chain: {str(e)}")
         raise
@@ -225,7 +226,9 @@ Content:
             partial_variables={"format_instructions": parser.get_format_instructions()}
         )
 
-        return LLMChain(prompt=prompt, llm=llm), parser
+        # Create a chain using the new approach: prompt | llm
+        chain = prompt | llm
+        return chain, parser
     except Exception as e:
         print(f"Error building short answer chain: {str(e)}")
         raise
@@ -330,11 +333,11 @@ async def quiz(
             for chunk in selected_chunks:
                 try:
                     if question_type == "mcq":
-                        response = mcq_chain.run(content=chunk.page_content)
-                        parsed_response = mcq_parser.parse(response)
+                        response = mcq_chain.invoke({"content": chunk.page_content})
+                        parsed_response = mcq_parser.parse(response.content)
                     else:  # short_answer
-                        response = short_chain.run(content=chunk.page_content)
-                        parsed_response = short_parser.parse(response)
+                        response = short_chain.invoke({"content": chunk.page_content})
+                        parsed_response = short_parser.parse(response.content)
                     
                     # Add metadata
                     parsed_response["source_page"] = chunk.metadata.get("page", "Unknown")
@@ -507,8 +510,8 @@ async def generate_all_short_questions(
                     break
 
                 try:
-                    out = short_chain.invoke({"content": chunk.page_content})["text"]
-                    parsed = short_parser.parse(out)
+                    out = short_chain.invoke({"content": chunk.page_content})
+                    parsed = short_parser.parse(out.content)
 
                     question_text = parsed.get("question")
                     if question_text:

@@ -1,6 +1,7 @@
 # FastAPI and server dependencies
 fastapi
 uvicorn[standard]
+python-multipart
 
 # Environment and configuration
 python-dotenv
