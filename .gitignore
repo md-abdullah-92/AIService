@@ -1,18 +1,59 @@
-node_modules
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment variables
 .env
-venv
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node.js (if applicable)
+node_modules/
+npm-debug.log*
+.npm
+jspm_packages/
+
+# Virtual environment
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
-logs
-npm-debug.log*
+logs/
+*.log
+
 # Build output
-dist
-# Dependency directories
-jspm_packages
-# Optional npm cache directory
-.npm
-# Optional eslint cache   
+dist/
 
-
-
-__pycache__
+# Temporary files
+tmp/
+temp/

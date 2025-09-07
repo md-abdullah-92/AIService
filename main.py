@@ -20,7 +20,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 # Load environment variables
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
- # Update the key name if needed
 
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in environment variables.")
@@ -38,7 +37,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # In production, replace with your frontend domain
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True
@@ -558,8 +557,8 @@ async def health_check():
     """Detailed health check"""
     return {
         "status": "healthy",
-        "openai_configured": bool(OPENAI_API_KEY),
-        "endpoints": ["/upload/", "/quiz/", "/generate-study-notes/"]
+        "gemini_configured": bool(GEMINI_API_KEY),
+        "endpoints": ["/upload/", "/quiz/", "/generate-study-notes/", "/short-questions/"]
     }
 
 if __name__ == "__main__":
